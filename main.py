@@ -3,10 +3,13 @@ from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 from langchain.tools import tool
 from langchain_core.messages import HumanMessage
-
+from tavily import TavilyClient
 
 load_dotenv()  # Load environment variables from .env file
 
+tavily = TavilyClient()
+
+@tool
 def search_web(query: str) -> str:
     """
     Tool that searches over internet
@@ -16,7 +19,8 @@ def search_web(query: str) -> str:
         The search result
     """
     print(f"Searching the web for: {query}")
-    return "Tokyo weather is sunny"
+    result = tavily.search(query=query)
+    return result
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 tools = [search_web]
